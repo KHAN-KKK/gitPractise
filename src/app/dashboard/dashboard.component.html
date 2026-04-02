@@ -1,16 +1,85 @@
 <p>dashboard works!</p>
 
-<form formgroup="myForm" (ngSubmit)="onSubmit()">
-    <div>
+      
+<p-multiSelect 
+[options]="dropdowns" 
+optionLabel="configCode" 
+[(ngModel)]="selectedDropdowns"
+(onChange)="onSelectionChange()"
+[dataKey]="'id'"
+placeholder="Select Configs"/>
+
+<br><br>
+
+<div>
+    <input 
+    type="text"
+    pInputText
+    placeholder="Search config..."
+    [(ngModel)]="searchText"
+    class="p-inputtext p-component"
+    [ngModelOptions]="{standalone: true}"
+    />
+    <i 
+    class="pi pi-times"
+    *ngIf="searchText"
+    (click)="clearSearch()"
+    style="cursor: pointer;">
+  </i>
+</div>
+
+ <form [formGroup]="myForm" (ngSubmit)="onSave()">
+    <!--<div>
         <label for="name">Name</label>
         <input type="text" placeholder="Enter Name"  >
     </div>
-    <div></div>
+    <div>
         <label for="name">Age</label>
         <input type="text" placeholder="Enter Age" >
-
-  <!--some one added new feature -->
- <!--some one added new feature 1 -->
-        
     </div>
-</form>
+         some one added new feature
+        some one added new feature 1  -->
+  
+        
+        <br><br>
+        
+        <div formArrayName="agentConfigurations">
+            
+            <!-- <div *ngFor="let item of dropdowns; let i = index" [formGroupName]="i" >
+                
+                <label>{{ item.configCode }}</label>
+                
+                <input 
+                type="text" 
+                formControlName="configValue"
+                class="p-inputtext p-component"
+                />
+            </div> -->
+        
+
+            <div 
+            *ngFor="let group of filteredConfigs;"
+            [formGroup]="group">
+        
+            <label>{{ group.value.configDescription }}</label>
+            
+            <!-- ✅ Toggle -->
+            <p-inputSwitch 
+            *ngIf="isToggleType(group.value.configValue)"
+            formControlName="configValue">
+        </p-inputSwitch>
+
+        <!-- ✅ Text Input -->
+        <input 
+            *ngIf="!isToggleType(group.value.isToggle)"
+            type="text"
+            formControlName="configValue"
+            class="p-inputtext p-component"
+        />
+            </div>
+
+        </div>
+        <button type="submit">Save</button>
+    </form> 
+
+
